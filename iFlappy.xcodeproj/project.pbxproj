@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5BD964C625C9057900DEE9D9 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD964C525C9057900DEE9D9 /* PhysicsCategory.swift */; };
 		5BFC3BCB25C73085009F5C74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC3BCA25C73085009F5C74 /* AppDelegate.swift */; };
 		5BFC3BCD25C73085009F5C74 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC3BCC25C73085009F5C74 /* GameScene.sks */; };
 		5BFC3BCF25C73085009F5C74 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC3BCE25C73085009F5C74 /* Actions.sks */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5BD964C525C9057900DEE9D9 /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
 		5BFC3BC725C73085009F5C74 /* iFlappy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iFlappy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFC3BCA25C73085009F5C74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5BFC3BCC25C73085009F5C74 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 				5BFC3BD425C73085009F5C74 /* Main.storyboard */,
 				5BFC3BD725C7308C009F5C74 /* Assets.xcassets */,
 				5BFC3BD925C7308C009F5C74 /* Info.plist */,
+				5BD964C525C9057900DEE9D9 /* PhysicsCategory.swift */,
 			);
 			path = iFlappy;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BFC3BD125C73085009F5C74 /* GameScene.swift in Sources */,
+				5BD964C625C9057900DEE9D9 /* PhysicsCategory.swift in Sources */,
 				5BFC3BD325C73085009F5C74 /* GameViewController.swift in Sources */,
 				5BFC3BCB25C73085009F5C74 /* AppDelegate.swift in Sources */,
 			);
