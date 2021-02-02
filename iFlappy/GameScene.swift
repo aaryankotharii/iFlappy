@@ -19,6 +19,7 @@ class GameScene: SKScene {
     }
     
     func createGround() {
+        
         /// Create Ground
         Ground = SKSpriteNode(imageNamed: "ground")
         Ground.setScale(0.5)
@@ -26,6 +27,13 @@ class GameScene: SKScene {
         /// Set Ground position
         let halfGroundHeight = Ground.frame.height / 2
         Ground.position = CGPoint(x: Ground.frame.width/2, y: halfGroundHeight)
+        
+        Ground.physicsBody = SKPhysicsBody(rectangleOf: Ground.size)
+        Ground.physicsBody?.categoryBitMask = PhysicsCategory.Ground
+        Ground.physicsBody?.collisionBitMask = PhysicsCategory.Bird
+        Ground.physicsBody?.contactTestBitMask = PhysicsCategory.Bird
+        Ground.physicsBody?.affectedByGravity = false
+        Ground.physicsBody?.isDynamic = false
         
         /// Add Ground to Scene
         self.addChild(Ground)
