@@ -15,6 +15,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         createGround()
         createBird()
+        createWalls()
     }
     
     func createGround() {
@@ -39,6 +40,22 @@ class GameScene: SKScene {
         
         /// Add Bird to Scene
         self.addChild(Bird)
+    }
+    
+    func createWalls() {
+       let wallPair = SKNode()
+        let topWall = SKSpriteNode(imageNamed: "wall")
+        let bottomWall = SKSpriteNode(imageNamed: "wall")
+        
+        topWall.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 400)
+        bottomWall.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 300)
+        
+        topWall.setScale(0.4)
+        bottomWall.setScale(0.4)
+        
+        wallPair.addChild(topWall)
+        wallPair.addChild(bottomWall)
+        self.addChild(wallPair)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
