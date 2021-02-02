@@ -11,8 +11,13 @@ import GameplayKit
 class GameScene: SKScene {
     
     var Ground = SKSpriteNode()
-        
+    var Bird = SKSpriteNode()
     override func didMove(to view: SKView) {
+        createGround()
+        createBird()
+    }
+    
+    func createGround() {
         /// Create Ground
         Ground = SKSpriteNode(imageNamed: "ground")
         Ground.setScale(0.5)
@@ -25,20 +30,31 @@ class GameScene: SKScene {
         self.addChild(Ground)
     }
     
+    func createBird() {
+        Bird = SKSpriteNode(imageNamed: "bird")
+        
+        /// Set Bird size and position
+        Bird.size = CGSize(width: 60, height: 70)
+        Bird.position = CGPoint(x: self.frame.width/2 - Bird.frame.width, y: self.frame.height/2)
+        
+        /// Add Bird to Scene
+        self.addChild(Bird)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
     }
     
     
