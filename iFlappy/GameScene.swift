@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
+    
     override func didMove(to view: SKView) {
         createGround()
         createBird()
@@ -35,6 +36,8 @@ class GameScene: SKScene {
         Ground.physicsBody?.affectedByGravity = false
         Ground.physicsBody?.isDynamic = false
         
+        Ground.zPosition = 3
+        
         /// Add Ground to Scene
         self.addChild(Ground)
     }
@@ -46,8 +49,17 @@ class GameScene: SKScene {
         Bird.size = CGSize(width: 60, height: 70)
         Bird.position = CGPoint(x: self.frame.width/2 - Bird.frame.width, y: self.frame.height/2)
         
+        Bird.physicsBody = SKPhysicsBody(circleOfRadius: Bird.frame.height / 2)
+        Bird.physicsBody?.categoryBitMask = PhysicsCategory.Bird
+        Bird.physicsBody?.collisionBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
+        Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
+        Bird.physicsBody?.affectedByGravity = true
+        
+        Bird.zPosition = 2
+        
         /// Add Bird to Scene
         self.addChild(Bird)
+
     }
     
     func createWalls() {
@@ -61,13 +73,33 @@ class GameScene: SKScene {
         topWall.setScale(0.4)
         bottomWall.setScale(0.4)
         
+        topWall.zRotation = CGFloat(Double.pi)
+        
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        topWall.physicsBody?.categoryBitMask = PhysicsCategory.Wall
+        topWall.physicsBody?.collisionBitMask = PhysicsCategory.Bird
+        topWall.physicsBody?.contactTestBitMask = PhysicsCategory.Bird
+        topWall.physicsBody?.isDynamic = false
+        topWall.physicsBody?.affectedByGravity = false
+        
+        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        bottomWall.physicsBody?.categoryBitMask = PhysicsCategory.Wall
+        bottomWall.physicsBody?.collisionBitMask = PhysicsCategory.Bird
+        bottomWall.physicsBody?.contactTestBitMask = PhysicsCategory.Bird
+        bottomWall.physicsBody?.isDynamic = false
+        bottomWall.physicsBody?.affectedByGravity = false
+        
         wallPair.addChild(topWall)
         wallPair.addChild(bottomWall)
+        
+        wallPair.zPosition = 1
+        
         self.addChild(wallPair)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
