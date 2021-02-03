@@ -12,6 +12,13 @@ class GameScene: SKScene {
     
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
+
+    var wallPair = SKNode()
+
+    var moveAndRemove = SKAction()
+    
+    var gameStarted : Bool = false
+    
     
     override func didMove(to view: SKView) {
         createGround()
@@ -59,16 +66,16 @@ class GameScene: SKScene {
         
         /// Add Bird to Scene
         self.addChild(Bird)
-
+        
     }
     
     func createWalls() {
-       let wallPair = SKNode()
+        wallPair = SKNode()
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
-        topWall.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 400)
-        bottomWall.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 - 300)
+        topWall.position = CGPoint(x: self.frame.width, y: self.frame.height/2 + 400)
+        bottomWall.position = CGPoint(x: self.frame.width, y: self.frame.height/2 - 300)
         
         topWall.setScale(0.4)
         bottomWall.setScale(0.4)
@@ -94,12 +101,37 @@ class GameScene: SKScene {
         
         wallPair.zPosition = 1
         
+        wallPair.run(moveAndRemove)
+        
         self.addChild(wallPair)
     }
     
+    func runWallSpawner() {
+        let spawn = SKAction.run { self.createWalls()  }
+        
+        let delay = SKAction.wait(forDuration: 2.0)
+        let spawnDelay = SKAction.sequence([spawn,delay])
+        let spawnDelayForever = SKAction.repeatForever(spawnDelay)
+        self.run(spawnDelayForever)
+        
+        let distance = CGFloat(self.frame.width + wallPair.frame.width)
+        let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
+        let removePipes = SKAction.removeFromParent()
+        
+        moveAndRemove = SKAction.sequence([movePipes,removePipes])
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+
+        if gameStarted {
+            Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+        } else {
+            gameStarted = true
+            runWallSpawner()
+            Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
