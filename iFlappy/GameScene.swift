@@ -60,7 +60,7 @@ class GameScene: SKScene {
         Bird.physicsBody?.categoryBitMask = PhysicsCategory.Bird
         Bird.physicsBody?.collisionBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
         Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
-        Bird.physicsBody?.affectedByGravity = true
+        Bird.physicsBody?.affectedByGravity = false
         
         Bird.zPosition = 2
         
@@ -74,8 +74,8 @@ class GameScene: SKScene {
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
-        topWall.position = CGPoint(x: self.frame.width, y: self.frame.height/2 + 400)
-        bottomWall.position = CGPoint(x: self.frame.width, y: self.frame.height/2 - 300)
+        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2 + 400)
+        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: self.frame.height/2 - 300)
         
         topWall.setScale(0.4)
         bottomWall.setScale(0.4)
@@ -128,6 +128,7 @@ class GameScene: SKScene {
             Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
         } else {
             gameStarted = true
+            Bird.physicsBody?.affectedByGravity = true
             runWallSpawner()
             Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
