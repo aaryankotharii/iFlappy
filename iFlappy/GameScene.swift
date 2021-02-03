@@ -101,6 +101,9 @@ class GameScene: SKScene {
         
         wallPair.zPosition = 1
         
+        let randomPosition = CGFloat.random(in: -200 ..< 200)
+        wallPair.position.y = wallPair.position.y + randomPosition
+        
         wallPair.run(moveAndRemove)
         
         self.addChild(wallPair)
