@@ -12,12 +12,15 @@ class GameScene: SKScene {
     
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
-
+    
     var wallPair = SKNode()
 
+    var scoreLabel = SKLabelNode()
+    
     var moveAndRemove = SKAction()
     
     var gameStarted : Bool = false
+    var gameOver : Bool = false
     
     var score : Int = 0
     
@@ -25,7 +28,16 @@ class GameScene: SKScene {
         createGround()
         createBird()
         createWalls()
+        setupScoreLabel()
         self.physicsWorld.contactDelegate = self
+    }
+    
+    func setupScoreLabel() {
+        scoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 100)
+        scoreLabel.text = "\(score)"
+        scoreLabel.zPosition = 4
+        scoreLabel.fontColor = .white
+        self.addChild(scoreLabel)
     }
     
     func createGround() {
@@ -173,16 +185,44 @@ class GameScene: SKScene {
 
 extension GameScene: SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
-        let bodyA = contact.bodyA
-        let bodyB = contact.bodyB
         
-        let firstCase = bodyA.categoryBitMask == PhysicsCategory.Score && bodyB.categoryBitMask == PhysicsCategory.Bird
-        let secondCase = bodyA.categoryBitMask == PhysicsCategory.Bird && bodyB.categoryBitMask == PhysicsCategory.Score
-        
-        if firstCase || secondCase  {
+        switch contact.state {
+        case .levelUp:
             score += 1
-            print("SCORE: ",score)
+            scoreLabel.text = "\(score)"
+        case .gameOver:
+            self.gameOver = true
+        case .error: ()
+            //TODO handle
         }
         
     }
 }
+
+extension SKPhysicsContact {
+    var state : ContactState {
+        let bodyA = self.bodyA
+        let bodyB = self.bodyB
+        
+        let scoreBird = bodyA.categoryBitMask == PhysicsCategory.Score && bodyB.categoryBitMask == PhysicsCategory.Bird
+        let birdScore = bodyA.categoryBitMask == PhysicsCategory.Bird && bodyB.categoryBitMask == PhysicsCategory.Score
+        
+        let birdWall = bodyA.categoryBitMask == PhysicsCategory.Bird && bodyB.categoryBitMask == PhysicsCategory.Wall
+        let wallBird = bodyA.categoryBitMask == PhysicsCategory.Wall && bodyB.categoryBitMask == PhysicsCategory.Bird
+        
+        let birdGround = bodyA.categoryBitMask == PhysicsCategory.Bird && bodyB.categoryBitMask == PhysicsCategory.Ground
+        let groundBird = bodyA.categoryBitMask == PhysicsCategory.Ground && bodyB.categoryBitMask == PhysicsCategory.Bird
+        
+        if scoreBird || birdScore { return .levelUp }
+        if birdWall || wallBird || birdGround || groundBird { return .gameOver }
+        
+        return .error
+    }
+}
+
+enum ContactState {
+    case levelUp
+    case gameOver
+    case error
+}
+
