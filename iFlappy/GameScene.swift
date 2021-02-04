@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
+    var restartButton = SKSpriteNode()
     
     var wallPair = SKNode()
 
@@ -24,12 +25,25 @@ class GameScene: SKScene {
     
     var score : Int = 0
     
-    override func didMove(to view: SKView) {
+    func restartScene() {
+        self.removeAllChildren()
+        self.removeAllActions()
+        gameOver = false
+        gameStarted = false
+        score = 0
+        createScene()
+    }
+    
+    func createScene() {
         createGround()
         createBird()
         createWalls()
         setupScoreLabel()
         self.physicsWorld.contactDelegate = self
+    }
+    
+    override func didMove(to view: SKView) {
+createScene()
     }
     
     func setupScoreLabel() {
@@ -38,6 +52,13 @@ class GameScene: SKScene {
         scoreLabel.zPosition = 4
         scoreLabel.fontColor = .white
         self.addChild(scoreLabel)
+    }
+    
+    func setupRestartButton() {
+        restartButton = SKSpriteNode(color: .blue, size: CGSize(width: 100, height: 50))
+        restartButton.position = CGPoint(x: self.frame.width/2 - 50, y: self.frame.height/2)
+        restartButton.zPosition = 5
+        self.addChild(restartButton)
     }
     
     func createGround() {
@@ -154,14 +175,24 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 
         if gameStarted {
+            if !gameOver {
             Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+            }
         } else {
             gameStarted = true
             Bird.physicsBody?.affectedByGravity = true
             runWallSpawner()
             Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+        }
+        
+        for touch in touches {
+            let location = touch.location(in:  self)
+            
+            if gameOver && restartButton.contains(location) {
+                restartScene()
+            }
         }
     }
     
@@ -192,6 +223,7 @@ extension GameScene: SKPhysicsContactDelegate {
             scoreLabel.text = "\(score)"
         case .gameOver:
             self.gameOver = true
+            self.setupRestartButton()
         case .error: ()
             //TODO handle
         }
