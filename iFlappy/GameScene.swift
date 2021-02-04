@@ -19,11 +19,13 @@ class GameScene: SKScene {
     
     var gameStarted : Bool = false
     
+    var score : Int = 0
     
     override func didMove(to view: SKView) {
         createGround()
         createBird()
         createWalls()
+        self.physicsWorld.contactDelegate = self
     }
     
     func createGround() {
@@ -59,7 +61,7 @@ class GameScene: SKScene {
         Bird.physicsBody = SKPhysicsBody(circleOfRadius: Bird.frame.height / 2)
         Bird.physicsBody?.categoryBitMask = PhysicsCategory.Bird
         Bird.physicsBody?.collisionBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
-        Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
+        Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall | PhysicsCategory.Score
         Bird.physicsBody?.affectedByGravity = false
         
         Bird.zPosition = 2
@@ -70,12 +72,25 @@ class GameScene: SKScene {
     }
     
     func createWalls() {
+        
+        let scoreNode = SKSpriteNode()
+        
+        scoreNode.size = CGSize(width: 1, height: 300)
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: scoreNode.size)
+        scoreNode.physicsBody?.affectedByGravity = false
+        scoreNode.physicsBody?.isDynamic = false
+        scoreNode.physicsBody?.categoryBitMask = PhysicsCategory.Score
+        scoreNode.physicsBody?.collisionBitMask = 0
+        scoreNode.physicsBody?.contactTestBitMask = PhysicsCategory.Bird
+        scoreNode.color = .blue
+        
         wallPair = SKNode()
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
-        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2 + 400)
-        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: self.frame.height/2 - 300)
+        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2 + 350)
+        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: self.frame.height/2 - 350)
+        scoreNode.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2)
         
         topWall.setScale(0.4)
         bottomWall.setScale(0.4)
@@ -98,14 +113,14 @@ class GameScene: SKScene {
         
         wallPair.addChild(topWall)
         wallPair.addChild(bottomWall)
-        
+        wallPair.addChild(scoreNode)
         wallPair.zPosition = 1
         
         let randomPosition = CGFloat.random(in: -200 ..< 200)
         wallPair.position.y = wallPair.position.y + randomPosition
-        
+        //
         wallPair.run(moveAndRemove)
-        
+         
         self.addChild(wallPair)
     }
     
@@ -117,7 +132,7 @@ class GameScene: SKScene {
         let spawnDelayForever = SKAction.repeatForever(spawnDelay)
         self.run(spawnDelayForever)
         
-        let distance = CGFloat(self.frame.width + wallPair.frame.width)
+        let distance = CGFloat(self.frame.width + wallPair.frame.width) //FIXME: increase distance
         let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
         let removePipes = SKAction.removeFromParent()
         
@@ -153,5 +168,21 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate {
+    func didBegin(_ contact: SKPhysicsContact) {
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        let firstCase = bodyA.categoryBitMask == PhysicsCategory.Score && bodyB.categoryBitMask == PhysicsCategory.Bird
+        let secondCase = bodyA.categoryBitMask == PhysicsCategory.Bird && bodyB.categoryBitMask == PhysicsCategory.Score
+        
+        if firstCase || secondCase  {
+            score += 1
+            print("SCORE: ",score)
+        }
+        
     }
 }
