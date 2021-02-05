@@ -39,6 +39,7 @@ class GameScene: SKScene {
         createBird()
         createWalls()
         setupScoreLabel()
+        setupBackground()
         self.physicsWorld.contactDelegate = self
     }
     
@@ -65,9 +66,19 @@ class GameScene: SKScene {
         restartButton.run(SKAction.scale(to: 1.0, duration: 0.3))
     }
     
+    func setupBackground() {
+        for i in 0..<2 {
+            let bg = SKSpriteNode(imageNamed: "background")
+            bg.anchorPoint = CGPoint(x: 0, y: 0)
+            bg.position = CGPoint(x: CGFloat(i) * self.frame.width, y: Ground.frame.height)
+            bg.name = "background"
+            bg.size = self.view!.bounds.size
+            self.addChild(bg)
+        }
+    }
+    
     func createGround() {
         
-        /// Create Ground
         Ground = SKSpriteNode(imageNamed: "ground")
         Ground.setScale(0.5)
         
@@ -88,11 +99,13 @@ class GameScene: SKScene {
         self.addChild(Ground)
     }
     
+    //TODO: run ground spawner
+    
     func createBird() {
         Bird = SKSpriteNode(imageNamed: "bird")
         
         /// Set Bird size and position
-        Bird.size = CGSize(width: 60, height: 70)
+        Bird.size = CGSize(width: 60, height: 42)
         Bird.position = CGPoint(x: self.frame.width/2 - Bird.frame.width, y: self.frame.height/2)
         
         Bird.physicsBody = SKPhysicsBody(circleOfRadius: Bird.frame.height / 2)
@@ -100,7 +113,6 @@ class GameScene: SKScene {
         Bird.physicsBody?.collisionBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall
         Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall | PhysicsCategory.Score
         Bird.physicsBody?.affectedByGravity = false
-        
         Bird.zPosition = 2
         
         /// Add Bird to Scene
@@ -170,7 +182,7 @@ class GameScene: SKScene {
         let spawnDelayForever = SKAction.repeatForever(spawnDelay)
         self.run(spawnDelayForever)
         
-        let distance = CGFloat(self.frame.width + wallPair.frame.width) //FIXME: increase distance
+        let distance = CGFloat(self.frame.width + wallPair.frame.width) * 2 //FIXME: increase distance
         let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
         let removePipes = SKAction.removeFromParent()
         
@@ -182,14 +194,14 @@ class GameScene: SKScene {
         if gameStarted {
             if !gameOver {
                 Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
             }
         } else {
             gameStarted = true
             Bird.physicsBody?.affectedByGravity = true
             runWallSpawner()
             Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
         }
         
         for touch in touches {
@@ -197,6 +209,8 @@ class GameScene: SKScene {
             
             if gameOver && restartButton.contains(location) {
                 restartScene()
+            } else {
+                
             }
         }
     }
