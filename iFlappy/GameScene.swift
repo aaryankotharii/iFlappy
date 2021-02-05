@@ -15,7 +15,7 @@ class GameScene: SKScene {
     var restartButton = SKSpriteNode()
     
     var wallPair = SKNode()
-
+    
     var scoreLabel = SKLabelNode()
     
     var moveAndRemove = SKAction()
@@ -43,7 +43,7 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-createScene()
+        createScene()
     }
     
     func setupScoreLabel() {
@@ -52,6 +52,7 @@ createScene()
         scoreLabel.zPosition = 4
         scoreLabel.fontColor = .white
         scoreLabel.fontName = "04b_19"
+        scoreLabel.fontSize = 60
         self.addChild(scoreLabel)
     }
     
@@ -59,7 +60,9 @@ createScene()
         restartButton = SKSpriteNode(color: .blue, size: CGSize(width: 100, height: 50))
         restartButton.position = CGPoint(x: self.frame.width/2 - 50, y: self.frame.height/2)
         restartButton.zPosition = 5
+        restartButton.setScale(0)
         self.addChild(restartButton)
+        restartButton.run(SKAction.scale(to: 1.0, duration: 0.3))
     }
     
     func createGround() {
@@ -119,6 +122,7 @@ createScene()
         scoreNode.color = .blue
         
         wallPair = SKNode()
+        wallPair.name = "wallPair"
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
@@ -154,7 +158,7 @@ createScene()
         wallPair.position.y = wallPair.position.y + randomPosition
         //
         wallPair.run(moveAndRemove)
-         
+        
         self.addChild(wallPair)
     }
     
@@ -174,11 +178,11 @@ createScene()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
         if gameStarted {
             if !gameOver {
-            Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
+                Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
             }
         } else {
             gameStarted = true
@@ -223,12 +227,20 @@ extension GameScene: SKPhysicsContactDelegate {
             score += 1
             scoreLabel.text = "\(score)"
         case .gameOver:
-            self.gameOver = true
-            self.setupRestartButton()
+            self.enumerateChildNodes(withName: "wallPair", using: stopGame)
         case .error: ()
-            //TODO handle
+        //TODO handle
         }
         
+    }
+    
+    func stopGame(node:SKNode,error:UnsafeMutablePointer<ObjCBool>) {
+        node.speed = 0
+        self.removeAllActions()
+        if !gameOver {
+            self.gameOver = true
+            self.setupRestartButton()
+        }
     }
 }
 
