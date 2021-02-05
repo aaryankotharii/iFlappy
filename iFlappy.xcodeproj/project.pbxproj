@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5B08D26325CA9883006DE193 /* RandomGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B08D26225CA9883006DE193 /* RandomGenerator.swift */; };
+		5B5FD8CC25CCFB1300B08753 /* 04B_19__.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 5B5FD8CB25CCFB1300B08753 /* 04B_19__.TTF */; };
 		5BD964C625C9057900DEE9D9 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BD964C525C9057900DEE9D9 /* PhysicsCategory.swift */; };
 		5BFC3BCB25C73085009F5C74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC3BCA25C73085009F5C74 /* AppDelegate.swift */; };
 		5BFC3BCD25C73085009F5C74 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5BFC3BCC25C73085009F5C74 /* GameScene.sks */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		5B08D26225CA9883006DE193 /* RandomGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomGenerator.swift; sourceTree = "<group>"; };
+		5B5FD8CB25CCFB1300B08753 /* 04B_19__.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = 04B_19__.TTF; sourceTree = "<group>"; };
 		5BD964C525C9057900DEE9D9 /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
 		5BFC3BC725C73085009F5C74 /* iFlappy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iFlappy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BFC3BCA25C73085009F5C74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +45,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B08D26725CBBF57006DE193 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		5BFC3BBE25C73085009F5C74 = {
 			isa = PBXGroup;
 			children = (
@@ -62,6 +71,8 @@
 		5BFC3BC925C73085009F5C74 /* iFlappy */ = {
 			isa = PBXGroup;
 			children = (
+				5B5FD8CB25CCFB1300B08753 /* 04B_19__.TTF */,
+				5B08D26725CBBF57006DE193 /* Fonts */,
 				5BFC3BCA25C73085009F5C74 /* AppDelegate.swift */,
 				5BFC3BCC25C73085009F5C74 /* GameScene.sks */,
 				5BFC3BCE25C73085009F5C74 /* Actions.sks */,
@@ -135,6 +146,7 @@
 			files = (
 				5BFC3BD625C73085009F5C74 /* Main.storyboard in Resources */,
 				5BFC3BCD25C73085009F5C74 /* GameScene.sks in Resources */,
+				5B5FD8CC25CCFB1300B08753 /* 04B_19__.TTF in Resources */,
 				5BFC3BD825C7308C009F5C74 /* Assets.xcassets in Resources */,
 				5BFC3BCF25C73085009F5C74 /* Actions.sks in Resources */,
 			);

@@ -51,6 +51,7 @@ createScene()
         scoreLabel.text = "\(score)"
         scoreLabel.zPosition = 4
         scoreLabel.fontColor = .white
+        scoreLabel.fontName = "04b_19"
         self.addChild(scoreLabel)
     }
     
