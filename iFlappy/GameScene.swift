@@ -13,12 +13,14 @@ class GameScene: SKScene {
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
     var restartButton = SKSpriteNode()
+    var mass = SKSpriteNode()
     
     var wallPair = SKNode()
     
     var scoreLabel = SKLabelNode()
     
     var moveAndRemove = SKAction()
+    var moveAndRemoveGround = SKAction()
     
     var gameStarted : Bool = false
     var gameOver : Bool = false
@@ -99,7 +101,21 @@ class GameScene: SKScene {
         self.addChild(Ground)
     }
     
-    //TODO: run ground spawner
+    // TODO: rename
+    func runGroundSpawner() {
+        let spawn = SKAction.run { self.createGround() }
+        
+        let delay = SKAction.wait(forDuration: 2.0)
+        let spawnDelay = SKAction.sequence([spawn,delay])
+        let spawnDelayForever = SKAction.repeatForever(spawnDelay)
+        self.run(spawnDelayForever)
+        
+        let distance = CGFloat(self.frame.width)
+        let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
+        let removePipes = SKAction.removeFromParent()
+        
+        moveAndRemoveGround = SKAction.sequence([movePipes,removePipes])
+    }
     
     func createBird() {
         Bird = SKSpriteNode(imageNamed: "bird")
@@ -114,6 +130,13 @@ class GameScene: SKScene {
         Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall | PhysicsCategory.Score
         Bird.physicsBody?.affectedByGravity = false
         Bird.zPosition = 2
+    
+        mass = SKSpriteNode(color: .systemPink, size: CGSize(width: 10, height: 10))
+        mass.zPosition = 3
+        mass.position = CGPoint(x: 20, y: 0)
+        mass.physicsBody = SKPhysicsBody(circleOfRadius: 5)
+        mass.physicsBody?.affectedByGravity = false
+        Bird.addChild(mass)
         
         /// Add Bird to Scene
         self.addChild(Bird)
@@ -199,9 +222,12 @@ class GameScene: SKScene {
         } else {
             gameStarted = true
             Bird.physicsBody?.affectedByGravity = true
+            mass.physicsBody?.affectedByGravity = true
+
             runWallSpawner()
-            Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+            runGroundSpawner()
+            Bird.physicsBody?.velocity = CGVector(dx: 1, dy: 0)
+            Bird.physicsBody?.applyImpulse(CGVector(dx: -1, dy: 30))
         }
         
         for touch in touches {
