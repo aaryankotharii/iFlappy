@@ -13,7 +13,8 @@ class GameScene: SKScene {
     var Ground = SKSpriteNode()
     var Bird = SKSpriteNode()
     var restartButton = SKSpriteNode()
-    var mass = SKSpriteNode()
+    var shareButton = SKSpriteNode()
+    var finalScoreNode = SKSpriteNode()
     
     var wallPair = SKNode()
     
@@ -36,10 +37,14 @@ class GameScene: SKScene {
         createScene()
     }
     
+    func shareScore() {
+        
+    }
+    
     func createScene() {
         createGround()
         createBird()
-        createWalls()
+       // createWalls()
         setupScoreLabel()
         setupBackground()
         self.physicsWorld.contactDelegate = self
@@ -60,12 +65,61 @@ class GameScene: SKScene {
     }
     
     func setupRestartButton() {
-        restartButton = SKSpriteNode(color: .blue, size: CGSize(width: 100, height: 50))
-        restartButton.position = CGPoint(x: self.frame.width/2 - 50, y: self.frame.height/2)
+        restartButton = SKSpriteNode(imageNamed: "restart")
+        restartButton.size = CGSize(width: 107, height: 37.5)
+        restartButton.position = CGPoint(x: self.frame.width/2 - 65, y: self.frame.height/2)
         restartButton.zPosition = 5
         restartButton.setScale(0)
         self.addChild(restartButton)
         restartButton.run(SKAction.scale(to: 1.0, duration: 0.3))
+    }
+    
+    func setupShareButton() {
+        shareButton = SKSpriteNode(imageNamed: "share")
+        shareButton.size = CGSize(width: 107, height: 37.5)
+        shareButton.position = CGPoint(x: self.frame.width/2 + 65, y: self.frame.height/2)
+        shareButton.zPosition = 5
+        shareButton.setScale(0)
+        self.addChild(shareButton)
+        shareButton.run(SKAction.scale(to: 1.0, duration: 0.3))
+    }
+    
+    func setupFinalScore() {
+        finalScoreNode = SKSpriteNode(imageNamed: "score")
+        finalScoreNode.size = CGSize(width: 100, height: 132)
+        finalScoreNode.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 100)
+        finalScoreNode.zPosition = 5
+        finalScoreNode.setScale(0)
+        
+        let highScore = DefaultManager().fetchHighScore()
+        
+        let finalScoreLabel = SKLabelNode(text: "\(score)")
+        finalScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 140)
+        finalScoreLabel.zPosition = 6
+        finalScoreLabel.fontColor = .white
+        finalScoreLabel.fontName = "04b_19"
+        finalScoreLabel.fontSize = 30
+        
+        let highScoreLabel = SKLabelNode(text: "\(highScore)")
+        highScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 190)
+        highScoreLabel.zPosition = 6
+        highScoreLabel.fontColor = .white
+        highScoreLabel.fontName = "04b_19"
+        highScoreLabel.fontSize = 30
+        
+        
+        self.addChild(finalScoreLabel)
+        self.addChild(highScoreLabel)
+
+        self.addChild(finalScoreNode)
+        finalScoreNode.run(SKAction.scale(to: 1.0, duration: 0.3))
+    }
+    
+    func gameOverSetupgameOverSetup() {
+        setupRestartButton()
+        setupShareButton()
+        setupFinalScore()
+        scoreLabel.run(SKAction.fadeAlpha(to: 0.0, duration: 0.3))
     }
     
     func setupBackground() {
@@ -97,6 +151,7 @@ class GameScene: SKScene {
         
         Ground.zPosition = 3
         
+        Ground.run(moveAndRemoveGround)
         /// Add Ground to Scene
         self.addChild(Ground)
     }
@@ -114,7 +169,7 @@ class GameScene: SKScene {
         let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
         let removePipes = SKAction.removeFromParent()
         
-        moveAndRemoveGround = SKAction.sequence([movePipes,removePipes])
+      moveAndRemoveGround = SKAction.sequence([movePipes,removePipes])
     }
     
     func createBird() {
@@ -130,13 +185,6 @@ class GameScene: SKScene {
         Bird.physicsBody?.contactTestBitMask = PhysicsCategory.Ground | PhysicsCategory.Wall | PhysicsCategory.Score
         Bird.physicsBody?.affectedByGravity = false
         Bird.zPosition = 2
-    
-        mass = SKSpriteNode(color: .systemPink, size: CGSize(width: 10, height: 10))
-        mass.zPosition = 3
-        mass.position = CGPoint(x: 20, y: 0)
-        mass.physicsBody = SKPhysicsBody(circleOfRadius: 5)
-        mass.physicsBody?.affectedByGravity = false
-        Bird.addChild(mass)
         
         /// Add Bird to Scene
         self.addChild(Bird)
@@ -154,15 +202,15 @@ class GameScene: SKScene {
         scoreNode.physicsBody?.categoryBitMask = PhysicsCategory.Score
         scoreNode.physicsBody?.collisionBitMask = 0
         scoreNode.physicsBody?.contactTestBitMask = PhysicsCategory.Bird
-        scoreNode.color = .blue
+        scoreNode.color = .clear
         
         wallPair = SKNode()
         wallPair.name = "wallPair"
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
-        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2 + 350)
-        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: self.frame.height/2 - 350)
+        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height + 50)
+        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: Ground.frame.height - 50)
         scoreNode.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2)
         
         topWall.setScale(0.4)
@@ -189,7 +237,7 @@ class GameScene: SKScene {
         wallPair.addChild(scoreNode)
         wallPair.zPosition = 1
         
-        let randomPosition = CGFloat.random(in: -200 ..< 200)
+        let randomPosition = CGFloat.random(in: -100 ..< 100)
         wallPair.position.y = wallPair.position.y + randomPosition
         //
         wallPair.run(moveAndRemove)
@@ -205,7 +253,8 @@ class GameScene: SKScene {
         let spawnDelayForever = SKAction.repeatForever(spawnDelay)
         self.run(spawnDelayForever)
         
-        let distance = CGFloat(self.frame.width + wallPair.frame.width) * 2 //FIXME: increase distance
+        let distance = CGFloat(self.frame.width + wallPair.frame.width) * 2
+        
         let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
         let removePipes = SKAction.removeFromParent()
         
@@ -217,17 +266,17 @@ class GameScene: SKScene {
         if gameStarted {
             if !gameOver {
                 Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 35))
             }
         } else {
             gameStarted = true
+            scoreLabel.alpha = 1.0
             Bird.physicsBody?.affectedByGravity = true
-            mass.physicsBody?.affectedByGravity = true
 
             runWallSpawner()
             runGroundSpawner()
-            Bird.physicsBody?.velocity = CGVector(dx: 1, dy: 0)
-            Bird.physicsBody?.applyImpulse(CGVector(dx: -1, dy: 30))
+            Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
         }
         
         for touch in touches {
@@ -235,8 +284,8 @@ class GameScene: SKScene {
             
             if gameOver && restartButton.contains(location) {
                 restartScene()
-            } else {
-                
+            } else if gameOver && shareButton.contains(location) {
+                shareScore()
             }
         }
     }
@@ -267,6 +316,7 @@ extension GameScene: SKPhysicsContactDelegate {
             score += 1
             scoreLabel.text = "\(score)"
         case .gameOver:
+            DefaultManager().saveHighScore(score)
             self.enumerateChildNodes(withName: "wallPair", using: stopGame)
         case .error: ()
         //TODO handle
@@ -279,7 +329,7 @@ extension GameScene: SKPhysicsContactDelegate {
         self.removeAllActions()
         if !gameOver {
             self.gameOver = true
-            self.setupRestartButton()
+            gameOverSetupgameOverSetup()
         }
     }
 }
