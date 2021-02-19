@@ -42,9 +42,8 @@ class GameScene: SKScene {
     }
     
     func createScene() {
-        createGround()
+        runGroundSpawner()
         createBird()
-       // createWalls()
         setupScoreLabel()
         setupBackground()
         self.physicsWorld.contactDelegate = self
@@ -136,6 +135,7 @@ class GameScene: SKScene {
     func createGround() {
         
         Ground = SKSpriteNode(imageNamed: "ground")
+        Ground.name = "ground"
         Ground.setScale(0.5)
         
         /// Set Ground position
@@ -156,7 +156,6 @@ class GameScene: SKScene {
         self.addChild(Ground)
     }
     
-    // TODO: rename
     func runGroundSpawner() {
         let spawn = SKAction.run { self.createGround() }
         
@@ -167,6 +166,7 @@ class GameScene: SKScene {
         
         let distance = CGFloat(self.frame.width)
         let movePipes = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.01 * distance))
+        
         let removePipes = SKAction.removeFromParent()
         
       moveAndRemoveGround = SKAction.sequence([movePipes,removePipes])
@@ -318,6 +318,7 @@ extension GameScene: SKPhysicsContactDelegate {
         case .gameOver:
             DefaultManager().saveHighScore(score)
             self.enumerateChildNodes(withName: "wallPair", using: stopGame)
+            self.enumerateChildNodes(withName: "ground", using: stopGame)
         case .error: ()
         //TODO handle
         }
