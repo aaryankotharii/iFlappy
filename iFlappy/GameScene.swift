@@ -174,6 +174,7 @@ class GameScene: SKScene {
     
     func createBird() {
         Bird = SKSpriteNode(imageNamed: "bird")
+        Bird.animateWithLocalGIF(fileNamed: "bird")
         
         /// Set Bird size and position
         Bird.size = CGSize(width: 60, height: 42)
