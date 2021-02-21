@@ -65,8 +65,8 @@ class GameScene: SKScene {
     
     func setupRestartButton() {
         restartButton = SKSpriteNode(imageNamed: "restart")
-        restartButton.size = CGSize(width: 107, height: 37.5)
-        restartButton.position = CGPoint(x: self.frame.width/2 - 65, y: self.frame.height/2)
+        restartButton.size = CGSize(width: 144, height: 50)
+        restartButton.position = CGPoint(x: self.frame.width/2 - 80, y: self.frame.height/2 - 70)
         restartButton.zPosition = 5
         restartButton.setScale(0)
         self.addChild(restartButton)
@@ -75,8 +75,8 @@ class GameScene: SKScene {
     
     func setupShareButton() {
         shareButton = SKSpriteNode(imageNamed: "share")
-        shareButton.size = CGSize(width: 107, height: 37.5)
-        shareButton.position = CGPoint(x: self.frame.width/2 + 65, y: self.frame.height/2)
+        shareButton.size = CGSize(width: 144, height: 50)
+        shareButton.position = CGPoint(x: self.frame.width/2 + 80, y: self.frame.height/2 - 70)
         shareButton.zPosition = 5
         shareButton.setScale(0)
         self.addChild(shareButton)
@@ -85,7 +85,7 @@ class GameScene: SKScene {
     
     func setupFinalScore() {
         finalScoreNode = SKSpriteNode(imageNamed: "score")
-        finalScoreNode.size = CGSize(width: 100, height: 132)
+        finalScoreNode.size = CGSize(width: 180, height: 238)
         finalScoreNode.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2 + 100)
         finalScoreNode.zPosition = 5
         finalScoreNode.setScale(0)
@@ -93,18 +93,18 @@ class GameScene: SKScene {
         let highScore = DefaultManager().fetchHighScore()
         
         let finalScoreLabel = SKLabelNode(text: "\(score)")
-        finalScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 140)
+        finalScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 310)
         finalScoreLabel.zPosition = 6
         finalScoreLabel.fontColor = .white
         finalScoreLabel.fontName = "04b_19"
-        finalScoreLabel.fontSize = 30
+        finalScoreLabel.fontSize = 40
         
         let highScoreLabel = SKLabelNode(text: "\(highScore)")
-        highScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 190)
+        highScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 410)
         highScoreLabel.zPosition = 6
         highScoreLabel.fontColor = .white
         highScoreLabel.fontName = "04b_19"
-        highScoreLabel.fontSize = 30
+        highScoreLabel.fontSize = 40
         
         
         self.addChild(finalScoreLabel)
@@ -127,7 +127,7 @@ class GameScene: SKScene {
             bg.anchorPoint = CGPoint(x: 0, y: 0)
             bg.position = CGPoint(x: CGFloat(i) * self.frame.width, y: Ground.frame.height)
             bg.name = "background"
-            bg.size = self.view!.bounds.size
+            bg.aspectFillToSize(fillSize: self.view!.bounds.size)
             self.addChild(bg)
         }
     }
@@ -136,7 +136,7 @@ class GameScene: SKScene {
         
         Ground = SKSpriteNode(imageNamed: "ground")
         Ground.name = "ground"
-        Ground.setScale(0.5)
+        Ground.setScale(0.75)
         
         /// Set Ground position
         let halfGroundHeight = Ground.frame.height / 2
@@ -177,7 +177,7 @@ class GameScene: SKScene {
         Bird.animateWithLocalGIF(fileNamed: "bird")
         
         /// Set Bird size and position
-        Bird.size = CGSize(width: 60, height: 42)
+        Bird.size = CGSize(width: 70, height: 50)
         Bird.position = CGPoint(x: self.frame.width/2 - Bird.frame.width, y: self.frame.height/2)
         
         Bird.physicsBody = SKPhysicsBody(circleOfRadius: Bird.frame.height / 2)
@@ -210,12 +210,12 @@ class GameScene: SKScene {
         let topWall = SKSpriteNode(imageNamed: "wall")
         let bottomWall = SKSpriteNode(imageNamed: "wall")
         
-        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height + 50)
-        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: Ground.frame.height - 50)
+        topWall.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height)
+        bottomWall.position = CGPoint(x: self.frame.width + bottomWall.frame.width, y: Ground.frame.height)
         scoreNode.position = CGPoint(x: self.frame.width + topWall.frame.width, y: self.frame.height/2)
         
-        topWall.setScale(0.4)
-        bottomWall.setScale(0.4)
+        topWall.setScale(0.65)
+        bottomWall.setScale(0.65)
         
         topWall.zRotation = CGFloat(Double.pi)
         
@@ -238,7 +238,7 @@ class GameScene: SKScene {
         wallPair.addChild(scoreNode)
         wallPair.zPosition = 1
         
-        let randomPosition = CGFloat.random(in: -100 ..< 100)
+        let randomPosition = CGFloat.random(in: -230 ..< 230)
         wallPair.position.y = wallPair.position.y + randomPosition
         //
         wallPair.run(moveAndRemove)
@@ -249,7 +249,7 @@ class GameScene: SKScene {
     func runWallSpawner() {
         let spawn = SKAction.run { self.createWalls()  }
         
-        let delay = SKAction.wait(forDuration: 2.0)
+        let delay = SKAction.wait(forDuration: 3.0)
         let spawnDelay = SKAction.sequence([spawn,delay])
         let spawnDelayForever = SKAction.repeatForever(spawnDelay)
         self.run(spawnDelayForever)
@@ -267,7 +267,7 @@ class GameScene: SKScene {
         if gameStarted {
             if !gameOver {
                 Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 35))
+                Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 55))
             }
         } else {
             gameStarted = true
@@ -277,7 +277,7 @@ class GameScene: SKScene {
             runWallSpawner()
             runGroundSpawner()
             Bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 30))
+            Bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 55))
         }
         
         for touch in touches {
@@ -363,3 +363,21 @@ enum ContactState {
     case error
 }
 
+
+extension SKSpriteNode {
+
+    func aspectFillToSize(fillSize: CGSize) {
+
+        if texture != nil {
+            self.size = texture!.size()
+
+            let verticalRatio = fillSize.height / self.texture!.size().height
+            let horizontalRatio = fillSize.width /  self.texture!.size().width
+
+            let scaleRatio = horizontalRatio > verticalRatio ? horizontalRatio : verticalRatio
+
+            self.setScale(scaleRatio)
+        }
+    }
+
+}
