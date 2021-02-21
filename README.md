@@ -6,6 +6,5 @@ iFlappy is an iOS game made using Apple's <a href = "https://developer.apple.com
   </b>
 </p>
 
-<p align = "left"> <img src = "Assets/demo.gif" width = "40%">
-<p align = "right"> <img src = "Assets/diag.png" width = "40%"> </p>
+<img src = "Assets/demo.gif" width = "40%"> <img src = "Assets/diag.png" width = "40%">
 
