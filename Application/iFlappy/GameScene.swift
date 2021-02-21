@@ -54,7 +54,7 @@ class GameScene: SKScene {
     }
     
     func setupScoreLabel() {
-        scoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 100)
+        scoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 120)
         scoreLabel.text = "\(score)"
         scoreLabel.zPosition = 4
         scoreLabel.fontColor = .white
@@ -93,14 +93,14 @@ class GameScene: SKScene {
         let highScore = DefaultManager().fetchHighScore()
         
         let finalScoreLabel = SKLabelNode(text: "\(score)")
-        finalScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 310)
+        finalScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 340)
         finalScoreLabel.zPosition = 6
         finalScoreLabel.fontColor = .white
         finalScoreLabel.fontName = "04b_19"
         finalScoreLabel.fontSize = 40
         
         let highScoreLabel = SKLabelNode(text: "\(highScore)")
-        highScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 410)
+        highScoreLabel.position = CGPoint(x: self.frame.width/2, y: self.frame.height - 430)
         highScoreLabel.zPosition = 6
         highScoreLabel.fontColor = .white
         highScoreLabel.fontName = "04b_19"
